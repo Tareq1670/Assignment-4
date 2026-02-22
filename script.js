@@ -50,6 +50,7 @@ function toggleButton(id) {
         interviewSection.classList.add("hidden");
         mainContainer.classList.add("hidden");
         rejectedSection.classList.remove("hidden");
+        renderRejected();
     }
 }
 
@@ -70,7 +71,6 @@ function counterNumber() {
     rejectedNumber.textContent = rejectedItems.length;
 }
 counterNumber();
-
 // Handle Event
 interviewSection.addEventListener("click", handleEvent);
 mainContainer.addEventListener("click", handleEvent);
@@ -133,6 +133,9 @@ function handleEvent(e) {
         }
 
         rejectedItems = rejectedItems.filter((item) => item.header !== infoSet.header);
+        if(currentSelected === "rejected_btn"){
+            renderRejected();
+        }
         counterNumber();
     }
     // Rejected Button
@@ -268,3 +271,70 @@ function renderInterviewItems() {
 }
 
 
+function renderRejected() {
+    rejectedSection.innerHTML = "";
+    rejectedItems.forEach((items) => {
+        const div = document.createElement("div");
+        div.innerHTML = ` <div
+                    class=" flex justify-between bg-base-100 border border-l-5 border-error p-6 rounded-[8px]"
+                >
+                    <div class="left space-y-5">
+                        <div class="heading space-y-1">
+                            <h2
+                                class="sub_title text-[18px] opacity-90 text-neutral text-[18px] font-semibold"
+                            >
+                                ${items.header}
+                            </h2>
+                            <p
+                                class="text_1 text-neutral opacity-60 text-[16px]"
+                            >
+                                ${items.position}
+                            </p>
+                        </div>
+                        <div
+                            class="type flex text-neutral opacity-60 text-[14px] sm:text-[16px]"
+                        >
+                            <p class="place">${items.place}</p>
+                            <ul class="list-disc list-outside pl-6 flex gap-7">
+                                <li class="job_type">${items.jobType}</li>
+                                <li class="salary">${items.salary}</li>
+                            </ul>
+                        </div>
+                        <div class="apply space-y-2">
+                            <div class="set_type">
+                                <p
+                                    class="apply_type bg-success/10 px-3 py-2 inline-block text-neutral/90 rounded-[8px] border border-success/20 font-medium"
+                                >
+                                    ${items.applyType}
+                                </p>
+                            </div>
+                            <p class="description text-neutral opacity-60 text-[14px] sm:text-[16px]">
+                                ${items.description}
+                            </p>
+                        </div>
+                        <div class="button flex gap-2">
+                            <button
+                                class="interview_btn btn btn-success btn-outline border-2"
+                            >
+                                INTERVIEW
+                            </button>
+                            <button
+                                class="rejected_btn btn btn-error btn-outline border-2"
+                            >
+                                REJECTED
+                            </button>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div
+                            class="w-8 h-8 circle rounded-full border-2 border-base-300 cursor-pointer flex items-center justify-center"
+                        >
+                            <i
+                                class="text-neutral/50 fa-regular fa-trash-can"
+                            ></i>
+                        </div>
+                    </div>
+                </div>`
+            rejectedSection.prepend(div);
+    })
+}
