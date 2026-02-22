@@ -2,12 +2,10 @@ const allBtn = document.getElementById("all_btn");
 const interviewBtn = document.getElementById("interview_btn");
 const rejectedBtn = document.getElementById("rejected_btn");
 
-
 // Card Object
 let interviewItems = [];
 let rejectedItems = [];
 currentSelected = "all_btn";
-
 
 // Default Button Set
 document.addEventListener("DOMContentLoaded", () => {
@@ -35,18 +33,18 @@ function toggleButton(id) {
         "ease-in-out",
     );
     selected.classList.remove("text-text-base-300", "bg-white");
-    if(id === "all_btn"){
+    if (id === "all_btn") {
         mainContainer.classList.remove("hidden");
         interviewSection.classList.add("hidden");
     }
 
-    if(id === "interview_btn"){
+    if (id === "interview_btn") {
         interviewSection.classList.remove("hidden");
         mainContainer.classList.add("hidden");
         rejectedSection.classList.add("hidden");
         renderInterviewItems();
     }
-    if(id === "rejected_btn"){
+    if (id === "rejected_btn") {
         interviewSection.classList.add("hidden");
         mainContainer.classList.add("hidden");
         rejectedSection.classList.remove("hidden");
@@ -132,8 +130,10 @@ function handleEvent(e) {
             interviewItems.push(infoSet);
         }
 
-        rejectedItems = rejectedItems.filter((item) => item.header !== infoSet.header);
-        if(currentSelected === "rejected_btn"){
+        rejectedItems = rejectedItems.filter(
+            (item) => item.header !== infoSet.header,
+        );
+        if (currentSelected === "rejected_btn") {
             renderRejected();
         }
         counterNumber();
@@ -192,21 +192,34 @@ function handleEvent(e) {
         if (!interViewExit) {
             rejectedItems.push(infoSet);
         }
-        interviewItems = interviewItems.filter((item) => item.header !== infoSet.header);
-        if(currentSelected === "interview_btn"){
+        interviewItems = interviewItems.filter(
+            (item) => item.header !== infoSet.header,
+        );
+        if (currentSelected === "interview_btn") {
             renderInterviewItems();
         }
-        
-        counterNumber();
-    };
-}
 
+        counterNumber();
+    }
+}
 
 function renderInterviewItems() {
     interviewSection.innerHTML = "";
-    interviewItems.forEach((items) => {
-        const div = document.createElement("div");
-        div.innerHTML = ` <div
+    if (interviewItems.length === 0) {
+        interviewSection.innerHTML = `<div
+                    class="bg-base-100 border border-base-300 p-6 rounded-[8px] flex flex-col items-center py-[111px]"
+                >
+                    <img src="images/jobs.png" alt="" />
+                    <div class="mt-5 text-center">
+                        <h2 class="text-neutral/90 font-semibold text-[24px]">No Jobs Available</h2>
+                        <p class="text-neutral/60">Check back soon for new job opportunities.</p>
+                    </div>
+                </div>`;
+        return;
+    } else {
+        interviewItems.forEach((items) => {
+            const div = document.createElement("div");
+            div.innerHTML = ` <div
                     class=" flex justify-between bg-base-100 border border-l-5 border-success p-6 rounded-[8px]"
                 >
                     <div class="left space-y-5">
@@ -265,17 +278,30 @@ function renderInterviewItems() {
                             ></i>
                         </div>
                     </div>
-                </div>`
+                </div>`;
             interviewSection.prepend(div);
-    })
+        });
+    }
 }
-
 
 function renderRejected() {
     rejectedSection.innerHTML = "";
-    rejectedItems.forEach((items) => {
-        const div = document.createElement("div");
-        div.innerHTML = ` <div
+
+    if (rejectedItems.length === 0) {
+        rejectedSection.innerHTML = `<div
+                    class="bg-base-100 border border-base-300 p-6 rounded-[8px] flex flex-col items-center py-[111px]"
+                >
+                    <img src="images/jobs.png" alt="" />
+                    <div class="mt-5 text-center">
+                        <h2 class="text-neutral font-semibold text-[24px]">No Rejected Jobs</h2>
+                        <p class="text-neutral/60">Check back soon for new job opportunities.</p>
+                    </div>
+                </div>`;
+        return;
+    } else {
+        rejectedItems.forEach((items) => {
+            const div = document.createElement("div");
+            div.innerHTML = ` <div
                     class=" flex justify-between bg-base-100 border border-l-5 border-error p-6 rounded-[8px]"
                 >
                     <div class="left space-y-5">
@@ -303,7 +329,7 @@ function renderRejected() {
                         <div class="apply space-y-2">
                             <div class="set_type">
                                 <p
-                                    class="apply_type bg-success/10 px-3 py-2 inline-block text-neutral/90 rounded-[8px] border border-success/20 font-medium"
+                                    class="apply_type bg-error/10 px-3 py-2 inline-block text-neutral/90 rounded-[8px] border border-error/20 font-medium"
                                 >
                                     ${items.applyType}
                                 </p>
@@ -334,7 +360,8 @@ function renderRejected() {
                             ></i>
                         </div>
                     </div>
-                </div>`
+                </div>`;
             rejectedSection.prepend(div);
-    })
+        });
+    }
 }
