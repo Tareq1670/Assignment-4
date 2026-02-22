@@ -5,7 +5,7 @@ const rejectedBtn = document.getElementById("rejected_btn");
 // Card Object
 let interviewItems = [];
 let rejectedItems = [];
-currentSelected = "all_btn";
+let currentSelected = "all_btn";
 
 // Default Button Set
 document.addEventListener("DOMContentLoaded", () => {
@@ -23,6 +23,7 @@ function toggleButton(id) {
     rejectedBtn.classList.add("text-text-base-300", "bg-white", "opacity-70");
 
     const selected = document.getElementById(id);
+    console.log(mainContainer.children.length);
 
     currentSelected = id;
     selected.classList.add(
@@ -36,6 +37,8 @@ function toggleButton(id) {
     if (id === "all_btn") {
         mainContainer.classList.remove("hidden");
         interviewSection.classList.add("hidden");
+        rejectedSection.classList.add("hidden");
+        checkNoItems(mainContainer);
     }
 
     if (id === "interview_btn") {
@@ -43,13 +46,17 @@ function toggleButton(id) {
         mainContainer.classList.add("hidden");
         rejectedSection.classList.add("hidden");
         renderInterviewItems();
+        checkNoItems(interviewSection);
     }
     if (id === "rejected_btn") {
         interviewSection.classList.add("hidden");
         mainContainer.classList.add("hidden");
         rejectedSection.classList.remove("hidden");
         renderRejected();
+        checkNoItems(rejectedSection);
     }
+    counterNumber();
+    jobCounter();
 }
 
 // Name
@@ -61,6 +68,7 @@ const interviewNumber = document.getElementById("interview_count");
 const rejectedNumber = document.getElementById("rejected_count");
 const interviewSection = document.getElementById("interview_container");
 const rejectedSection = document.getElementById("rejected_container");
+const noItems = document.getElementById("no_items");
 
 // Counter
 function counterNumber() {
@@ -200,24 +208,14 @@ function handleEvent(e) {
         }
 
         counterNumber();
+        jobCounter();
     }
 }
 
 function renderInterviewItems() {
     interviewSection.innerHTML = "";
     // Condition
-    if (interviewItems.length === 0) {
-        interviewSection.innerHTML = `<div
-                    class="bg-base-100 border border-base-300 p-6 rounded-[8px] flex flex-col items-center py-[111px]"
-                >
-                    <img src="images/jobs.png" alt="" />
-                    <div class="mt-5 text-center">
-                        <h2 class="text-neutral/90 font-semibold text-[24px]">No Jobs Available</h2>
-                        <p class="text-neutral/60">Check back soon for new job opportunities.</p>
-                    </div>
-                </div>`;
-        return;
-    } else {
+        noItems.classList.add("hidden");
         interviewItems.forEach((items) => {
             const div = document.createElement("div");
             div.innerHTML = ` <div
@@ -283,23 +281,12 @@ function renderInterviewItems() {
             interviewSection.prepend(div);
         });
     }
-}
+
 
 function renderRejected() {
     rejectedSection.innerHTML = "";
-    // Condition
-    if (rejectedItems.length === 0) {
-        rejectedSection.innerHTML = `<div
-                    class="bg-base-100 border border-base-300 p-6 rounded-[8px] flex flex-col items-center py-[111px]"
-                >
-                    <img src="images/jobs.png" alt="" />
-                    <div class="mt-5 text-center">
-                        <h2 class="text-neutral font-semibold text-[24px]">No Rejected Jobs</h2>
-                        <p class="text-neutral/60">Check back soon for new job opportunities.</p>
-                    </div>
-                </div>`;
-        return;
-    } else {
+
+        noItems.classList.add("hidden");
         rejectedItems.forEach((items) => {
             const div = document.createElement("div");
             div.innerHTML = ` <div
@@ -365,7 +352,6 @@ function renderRejected() {
             rejectedSection.prepend(div);
         });
     }
-}
 
 // Delete Button
 mainContainer.addEventListener("click", deleteBtn);
@@ -386,6 +372,40 @@ function deleteBtn(e) {
             (items) => items.header !== subTitle,
         );
         counterNumber();
+        jobCounter();
+        if(currentSelected === "interview_btn") {
+            checkNoItems(interviewSection);
+        }
+        if(currentSelected === "rejected_btn") {
+            checkNoItems(rejectedSection);
+        }
+        if(currentSelected === "all_btn") {
+            checkNoItems(mainContainer);
+        }
     }
-    e.preventDefault();
+}
+
+// Job Counter Section
+const jobCounterNumber = document.getElementById("jobs_count");
+
+function jobCounter() {
+    if (currentSelected === "interview_btn") {
+        jobCounterNumber.textContent = `${interviewItems.length} jobs of ${mainContainer.children.length}`;
+    } else if (currentSelected === "rejected_btn") {
+        jobCounterNumber.textContent = `${rejectedItems.length} of ${mainContainer.children.length}`;
+    } else {
+        jobCounterNumber.textContent = `${mainContainer.children.length} Jobs`;
+    }
+}
+
+
+
+
+function checkNoItems(container) {
+    const cardItems = container.querySelectorAll(".sub_title");
+    if(cardItems.length === 0) {
+        noItems.classList.remove("hidden");
+    } else {
+        noItems.classList.add("hidden");
+    }
 }
