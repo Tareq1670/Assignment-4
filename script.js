@@ -205,6 +205,7 @@ function handleEvent(e) {
 
 function renderInterviewItems() {
     interviewSection.innerHTML = "";
+    // Condition
     if (interviewItems.length === 0) {
         interviewSection.innerHTML = `<div
                     class="bg-base-100 border border-base-300 p-6 rounded-[8px] flex flex-col items-center py-[111px]"
@@ -286,7 +287,7 @@ function renderInterviewItems() {
 
 function renderRejected() {
     rejectedSection.innerHTML = "";
-
+    // Condition
     if (rejectedItems.length === 0) {
         rejectedSection.innerHTML = `<div
                     class="bg-base-100 border border-base-300 p-6 rounded-[8px] flex flex-col items-center py-[111px]"
@@ -364,4 +365,27 @@ function renderRejected() {
             rejectedSection.prepend(div);
         });
     }
+}
+
+// Delete Button
+mainContainer.addEventListener("click", deleteBtn);
+interviewSection.addEventListener("click", deleteBtn);
+rejectedSection.addEventListener("click", deleteBtn);
+// Delete Function
+function deleteBtn(e) {
+    const subTitle = e.target.parentNode.parentNode.parentNode
+        .querySelector(".sub_title")
+        .textContent.trim();
+    if (e.target.classList.contains("fa-trash-can")) {
+        e.target.parentNode.parentNode.parentNode.remove();
+        // InterView And Rejected Item Remove
+        interviewItems = interviewItems.filter(
+            (items) => items.header !== subTitle,
+        );
+        rejectedItems = rejectedItems.filter(
+            (items) => items.header !== subTitle,
+        );
+        counterNumber();
+    }
+    e.preventDefault();
 }
